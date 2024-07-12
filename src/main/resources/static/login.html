@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Demo</title>
+<!--    <meta name="description" content=""/>-->
+    <meta name="viewport" content="width=device-width"/>
+<!--    <base href="/"/>-->
+</head>
+<body>
+    <h1>Login</h1>
+    <div class="container unauthenticated">
+        <!--
+            baseURI: /oauth2/authorization/key
+            spring docs: https://docs.spring.io/spring-security/reference/servlet/oauth2/login/advanced.html#oauth2login-advanced-login-page
+        -->
+        With Kakao: <a href="/oauth2/authorization/kakao">click here</a>
+    </div>
+    <div class="container authenticated" style="display:none">
+        Logged in as: <span id="user"></span>
+    </div>
+    <script type="text/javascript">
+        $.get("/user", function(data) {
+            $("#user").html(data.name);
+            $(".unauthenticated").hide()
+            $(".authenticated").show()
+        });
+    </script>
+</body>
+</html>

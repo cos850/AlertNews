@@ -1,6 +1,6 @@
 package com.alertnews.config;
 
-import com.alertnews.user.OAuth2KakaoUserService;
+import com.alertnews.auth.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +13,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class OAuth2LoginSecurityConfig {
-    private final OAuth2KakaoUserService oAuth2KakaoUserSerivce;
+    private final CustomOAuth2UserService oAuth2UserService;
 
     @Autowired
-    public OAuth2LoginSecurityConfig(OAuth2KakaoUserService oAuth2KakaoUserSerivce) {
-        this.oAuth2KakaoUserSerivce = oAuth2KakaoUserSerivce;
+    public OAuth2LoginSecurityConfig(CustomOAuth2UserService oAuth2UserService) {
+        this.oAuth2UserService = oAuth2UserService;
     }
 
     @Bean

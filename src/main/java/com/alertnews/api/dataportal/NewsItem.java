@@ -23,7 +23,7 @@ public class NewsItem {
         news.setUrl(kotraNewsUrl);
         news.setRegion(regn);
         news.setSummary(cntntSumar);
-        news.setContentHtml(newsBdt);
+        news.setContentHtml(newsBdt.getBytes());
         news.setPublishDate(othbcDt);
         news.setWriter(newsWrterNm);
         news.setNation(natn);

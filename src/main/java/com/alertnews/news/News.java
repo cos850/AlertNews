@@ -1,7 +1,6 @@
 package com.alertnews.news;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,7 +11,9 @@ import lombok.Getter;
 @EqualsAndHashCode
 public class News {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String url;
     private String region;
@@ -20,7 +21,10 @@ public class News {
     private String publishDate;
     private String writer;
     private String nation;
-    private String contentHtml;
+
+    @Lob
+    @Column(columnDefinition = "CLOB")
+    private byte[] contentHtml;
 
     public News() {}
 
@@ -55,8 +59,7 @@ public class News {
     public void setNation(String nation) {
         this.nation = nation;
     }
-
-    public void setContentHtml(String contentHtml) {
+    public void setContentHtml(byte[] contentHtml) {
         this.contentHtml = contentHtml;
     }
 }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ class NewsServiceTest {
         doReturn(testData).when(repository).saveAll(testData);
 
         // when
-        List<News> fetchData = newsService.fetchYesterdayNews();
+        List<News> fetchData = newsService.fetchNewsForDate(LocalDate.now().minusDays(1));
 
         // then
         Assertions.assertThat(fetchData.size()).isEqualTo(1);

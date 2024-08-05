@@ -2,11 +2,17 @@ spring:
   application:
     name: AlertNews
   datasource:
-    url: jdbc:h2:mem:test
+    url: jdbc:h2:tcp://localhost/~/data/demo
     driverClassName: org.h2.Driver
     username: sa
     password: 123
   jpa:
+    hibernate:
+      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
+  batch:
+    jdbc:
+      # Spring Batch 스키마 초기화 설정
+      initialize-schema: always
   profiles:
     include: oauth

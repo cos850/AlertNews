@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
@@ -31,6 +32,10 @@ public class NewsApiClient implements ApiClient<DataPortalResponse> {
         apiClient = WebClient.builder()
                 .uriBuilderFactory(factory)
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON.toString())
+                .codecs(clientCodecConfigurer -> clientCodecConfigurer
+                        .defaultCodecs()
+                        .maxInMemorySize(10 * 1024 * 1024) // Increase max in-memory size to 10MB
+                )
                 // 테스트 코드이므로 서비스 요청 성공 후 삭제
                 .filter(ExchangeFilterFunction.ofRequestProcessor(
                         clientRequest -> {
@@ -50,13 +55,27 @@ public class NewsApiClient implements ApiClient<DataPortalResponse> {
 
     @Override
     public DataPortalResponse getWithParameter(Map<String, String> params) {
-        HashMap<String, Object> response = apiClient.get()
-                .uri(endPoint + parametersToString(params))
-                .retrieve()
-                .bodyToMono(HashMap.class)
-                .block();
+        try {
+            // Use bodyToFlux to stream data
+            Flux<HashMap> responseFlux = apiClient.get()
+                    .uri(endPoint + parametersToString(params))
+                    .retrieve()
+                    .bodyToFlux(HashMap.class)
+                    .log(); // Log for debugging
 
-        return convertResponse(response);
+            // Collect flux into a list
+            List<HashMap> responseList = responseFlux.collectList().block();
+
+            if (responseList != null && !responseList.isEmpty()) {
+                return convertResponse(responseList.get(0));
+            } else {
+                throw new RuntimeException("No data received from API");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error fetching data from API", e);
+        }
     }
 
     public static Map<String, String> makeParams(int numOfRows, LocalDate searchDate){

@@ -3,6 +3,7 @@ package com.alertnews.news;
 import com.alertnews.api.ApiClient;
 import com.alertnews.api.dataportal.DataPortalResponse;
 import com.alertnews.api.dataportal.NewsApiClient;
+import com.alertnews.api.dataportal.NewsItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +24,12 @@ public class NewsService {
         this.newsApiClient = newsApiClient;
     }
 
-    public List<News> fetchYesterdayNews() {
-        Map<String, String> params = NewsApiClient.makeParams(100, LocalDate.now().minusDays(1));
+    public List<News> fetchNewsForDate(LocalDate date) {
+        Map<String, String> params = NewsApiClient.makeParams(100, date);
 
         DataPortalResponse response = newsApiClient.getWithParameter(params);
         List<News> newsEntities = response.getBody().getItemList().stream()
-                .map(newsItem -> newsItem.toNewsEntity())
+                .map(NewsItem::toNewsEntity)
                 .collect(Collectors.toList());
 
         return (List<News>) newsRepository.saveAll(newsEntities);

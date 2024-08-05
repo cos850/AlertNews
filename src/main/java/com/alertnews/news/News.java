@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Entity
+@Table(name = "NEWS")
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode

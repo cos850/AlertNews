@@ -23,7 +23,7 @@ public class TemplateLoader {
 
     public byte[] readTemplateToBytes(String fileName){
         try {
-            Resource resource = resourceLoader.getResource("template/" + fileName);
+            Resource resource = resourceLoader.getResource("classpath:/template/" + fileName);
             return Files.readAllBytes(Paths.get(resource.getURI()));
         } catch (Exception e) {
             e.printStackTrace();
